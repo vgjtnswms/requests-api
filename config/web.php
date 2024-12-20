@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$container = require __DIR__ . '/container.php';
 
 $config = [
     'id' => 'requests-api',
@@ -15,12 +16,14 @@ $config = [
         'request' => [
             'cookieValidationKey' => 'KsinGHmPVR0StR_guOtaTN4jyRHPJyYJ',
         ],
+        'errorHandler' => [
+            'errorAction' => 'request/error',
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
@@ -40,10 +43,15 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [],
+            'rules' => [
+                'POST /requests' => 'request/create',
+                'GET /requests' => 'request/index',
+                'PUT /requests/<id:\d+>' => 'request/update',
+            ],
         ],
     ],
     'params' => $params,
+    'container' => $container,
 ];
 
 if (YII_ENV_DEV) {
